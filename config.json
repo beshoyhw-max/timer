@@ -1,0 +1,30 @@
+{
+  "tiers": [
+    {
+      "threshold_mins": 0.0,
+      "rate_amount": 1.0,
+      "rate_interval": 5
+    },
+    {
+      "threshold_mins": 0.5,
+      "rate_amount": 300.0,
+      "rate_interval": 5
+    }
+  ],
+  "max_cost": 2500.0,
+  "alarm_threshold_1": 30.0,
+  "alarm_threshold_2": 6.0,
+  "quote": "测试",
+  "speakers": [
+    {
+      "name": "Beshoy",
+      "time_secs": 150,
+      "words": "Hello world"
+    },
+    {
+      "name": "beshoy 2",
+      "time_secs": 111,
+      "words": "GG Bro"
+    }
+  ]
+}

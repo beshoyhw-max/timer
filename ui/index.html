@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>会议计时器 — Meeting Timer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- ═══════ FLOATING TIMER ═══════ -->
+  <div id="floating-timer" class="idle">
+    <div id="drag-bar">
+      <span id="drag-hint">⋮⋮</span>
+      <div id="bar-center">
+        <span id="speaker-name"></span>
+        <span id="clock">00:00</span>
+        <span id="money-counter" class="hidden">
+          <span id="money-icon">💰</span>
+          <span id="money-value">￥0.00</span>
+        </span>
+      </div>
+      <div id="bar-actions">
+        <button id="gear-btn" title="Settings / 设置">⚙</button>
+      </div>
+    </div>
+
+    <!-- ═══════ CONTROL PANEL (dropdown) ═══════ -->
+    <div id="control-panel" class="hidden">
+      <div class="cp-section">
+        <label>发言人 / Speaker</label>
+        <input type="text" id="input-speaker" placeholder="Name / 姓名" spellcheck="false">
+      </div>
+      <div class="cp-row">
+        <div class="cp-section cp-half">
+          <label>时间 / Time</label>
+          <div class="cp-time-inputs">
+            <input type="number" id="input-minutes" min="0" max="120" step="any" value="5" placeholder="min">
+            <span class="cp-colon">:</span>
+            <input type="number" id="input-seconds" min="0" max="59" step="any" value="0" placeholder="sec">
+          </div>
+        </div>
+        <div class="cp-section cp-half">
+          <label>罚款 / Rate</label>
+          <div class="cp-time-inputs">
+            <span class="cp-dollar">￥</span>
+            <input type="number" id="input-rate" min="1" max="100" value="5" placeholder="amt">
+            <span class="cp-slash">/</span>
+            <input type="number" id="input-interval" min="1" max="60" value="5" placeholder="sec">
+            <span class="cp-unit">s</span>
+          </div>
+        </div>
+      </div>
+      <div class="cp-buttons">
+        <button id="btn-start" class="cp-btn cp-btn-start">▶ START</button>
+        <button id="btn-stop" class="cp-btn cp-btn-stop" disabled>■ STOP</button>
+        <button id="btn-next" class="cp-btn cp-btn-next" disabled>⏭ NEXT</button>
+      </div>
+
+      <!-- History -->
+      <div id="history-section" class="hidden">
+        <div class="cp-divider"></div>
+        <div class="cp-section-header">
+          <label>记录 / History</label>
+          <button id="btn-export" class="cp-btn-sm" title="Export CSV">📥</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FULLSCREEN OVERLAY ═══════ -->
+  <div id="fullscreen-overlay" class="hidden">
+    <div id="fs-backdrop"></div>
+
+    <!-- Red Envelope -->
+    <div id="envelope-container">
+      <div id="envelope">
+        <div id="envelope-flap"></div>
+        <div id="envelope-body">
+          <div id="envelope-symbol">福</div>
+        </div>
+        <div id="envelope-front">
+          <div id="envelope-gold-circle">
+            <span id="envelope-cost">￥0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote (shown during animations) -->
+    <div id="animation-quote" class="hidden"></div>
+
+    <!-- Flying Bills -->
+    <div id="bills-container"></div>
+
+    <!-- Thank You Message -->
+    <div id="thankyou-msg" class="hidden">
+      <div id="ty-text">感谢您的贡献</div>
+      <div id="ty-sub">Thank you for your contribution</div>
+      <div id="ty-cost"></div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <script src="js/display.js"></script>
+  <script src="js/control.js"></script>
+</body>
+
+</html>
