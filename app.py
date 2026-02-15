@@ -1,8 +1,6 @@
-gio"""Meeting Speaker Timer — PyWebView Desktop App (Dual-Window)."""
+"""Meeting Speaker Timer — PyWebView Desktop App (Dual-Window)."""
 
-import ctypes
 import os
-import sys
 import time
 
 import webview
@@ -11,33 +9,6 @@ from timer_engine import TimerEngine
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE_DIR, "ui")
-
-
-def _make_window_translucent(window, alpha=51):
-    """Make window semi-transparent. alpha: 0=invisible, 255=opaque.
-    51 = ~20% opacity.
-    """
-    if sys.platform != "win32":
-        return
-    try:
-        hwnd = window.native.Handle
-        if hasattr(hwnd, 'ToInt64'):
-            hwnd = hwnd.ToInt64()
-        elif hasattr(hwnd, 'ToInt32'):
-            hwnd = hwnd.ToInt32()
-        else:
-            hwnd = int(hwnd)
-    except Exception:
-        return
-
-    user32 = ctypes.windll.user32
-    GWL_EXSTYLE = -20
-    WS_EX_LAYERED = 0x80000
-    LWA_ALPHA = 0x2
-
-    style = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
-    user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED)
-    user32.SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA)
 
 
 # Keep references to windows
@@ -152,7 +123,7 @@ def main():
         easy_drag=True,
         on_top=True,
         resizable=True,
-        background_color="#0a0a0f",
+        transparent=True,  # Qt supports per-pixel alpha
     )
 
     control_window = webview.create_window(
@@ -172,10 +143,9 @@ def main():
     def on_start():
         time.sleep(0.5)
         display_window.resize(500, 120)
-        # 51 = 20% opacity background. Text compensated via CSS.
-        _make_window_translucent(display_window, alpha=51)
 
-    webview.start(on_start, debug=False)
+    # Force Qt backend
+    webview.start(on_start, debug=False, gui='qt')
 
 
 if __name__ == "__main__":
