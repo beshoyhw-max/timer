@@ -3,9 +3,11 @@
 import os
 # Force qtpy to use PySide6, as we only installed PySide6
 os.environ["QT_API"] = "pyside6"
-# Fix GLES context creation failure and flickering on transparent window
-os.environ["QT_OPENGL"] = "software"
-os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing"
+# Use ANGLE with D3D11 for better compatibility and performance on Windows
+# This translates OpenGL to DirectX 11, avoiding flaky native GL drivers
+os.environ["QT_OPENGL"] = "angle"
+os.environ["QT_ANGLE_PLATFORM"] = "d3d11"
+# Remove software rendering and disable-gpu flags which caused issues
 
 import time
 import webview
