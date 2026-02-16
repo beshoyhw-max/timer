@@ -3,6 +3,10 @@
 import os
 # Force qtpy to use PySide6, as we only installed PySide6
 os.environ["QT_API"] = "pyside6"
+# Fix transparent window flickering/cutting out by disabling GPU acceleration
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
+# Force software rendering for Qt Quick as well
+os.environ["QT_QUICK_BACKEND"] = "software"
 
 import time
 import webview
