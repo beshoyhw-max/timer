@@ -1,8 +1,10 @@
 """Meeting Speaker Timer — PyWebView Desktop App (Dual-Window)."""
 
 import os
-import time
+# Force qtpy to use PySide6, as we only installed PySide6
+os.environ["QT_API"] = "pyside6"
 
+import time
 import webview
 
 from timer_engine import TimerEngine
