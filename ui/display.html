@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会议计时器 — Meeting Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- ═══════ FLOATING TIMER ═══════ -->
+    <div id="floating-timer" class="idle">
+        <div id="drag-bar">
+            <span id="drag-hint">⋮⋮</span>
+            <div id="bar-center">
+                <span id="speaker-name"></span>
+                <span id="clock">00:00</span>
+                <span id="money-counter" class="hidden">
+                    <span id="money-icon">💰</span>
+                    <span id="money-value">￥0.00</span>
+                </span>
+            </div>
+            <div id="bar-actions">
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ FULLSCREEN OVERLAY ═══════ -->
+    <div id="fullscreen-overlay" class="hidden">
+        <div id="fs-backdrop"></div>
+
+        <!-- Red Envelope -->
+        <div id="envelope-container">
+            <div id="envelope">
+                <div id="envelope-flap"></div>
+                <div id="envelope-body">
+                    <div id="envelope-symbol">福</div>
+                </div>
+                <div id="envelope-front">
+                    <div id="envelope-gold-circle">
+                        <span id="envelope-cost">￥0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote (shown during animations) -->
+        <div id="animation-quote" class="hidden"></div>
+
+        <!-- Flying Bills -->
+        <div id="bills-container"></div>
+
+        <!-- Thank You Message -->
+        <div id="thankyou-msg" class="hidden">
+            <div id="ty-text">感谢您的贡献</div>
+            <div id="ty-sub">Thank you for your contribution</div>
+            <div id="ty-cost"></div>
+        </div>
+
+        <!-- Confetti Canvas -->
+        <canvas id="confetti-canvas"></canvas>
+    </div>
+
+    <script src="js/display.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>控制面板 — Control Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/control.css">
+</head>
+
+<body>
+    <div id="control-app">
+        <!-- ═══════ LIVE STATUS BAR ═══════ -->
+        <div id="status-bar">
+            <div id="status-phase" class="status-chip idle">READY</div>
+            <span id="status-speaker"></span>
+            <span id="status-clock" class="mono">00:00</span>
+            <span id="status-cost" class="mono hidden">￥0.00</span>
+        </div>
+
+        <!-- ═══════ SPEAKER CONFIG ═══════ -->
+        <div class="section">
+            <label class="section-label">发言人 / Speaker</label>
+            <input type="text" id="input-speaker" placeholder="Name / 姓名" spellcheck="false" autocomplete="off">
+        </div>
+
+        <!-- ═══════ TIME CONFIG & ADD TIME ═══════ -->
+        <div class="section-row time-config-row">
+            <div class="section">
+                <label class="section-label">时间 / Time</label>
+                <div class="inline-inputs">
+                    <input type="number" id="input-minutes" min="0" max="120" step="any" value="5" class="narrow">
+                    <span class="sep">:</span>
+                    <input type="number" id="input-seconds" min="0" max="59" step="any" value="0" class="narrow">
+                </div>
+            </div>
+
+            <div class="section" id="add-time-section">
+                <label class="section-label">加时 / Add Time (minutes)</label>
+                <div class="btn-row add-time-row">
+                    <button class="btn btn-add" data-mins="5">+5</button>
+                    <button class="btn btn-add" data-mins="10">+10</button>
+                    <button class="btn btn-add" data-mins="20">+20</button>
+                    <div class="custom-add">
+                        <input type="number" id="input-custom-time" min="0.1" max="120" step="any" value="1"
+                            class="narrow">
+                        <button class="btn btn-add-custom" id="btn-add-custom">+Custom</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ═══════ MAIN ACTIONS ═══════ -->
+        <div class="btn-row main-actions">
+            <button id="btn-start" class="btn btn-start">▶ START</button>
+            <button id="btn-pause" class="btn btn-pause" disabled>⏸ PAUSE</button>
+            <button id="btn-stop" class="btn btn-stop" disabled>■ STOP</button>
+            <button id="btn-next" class="btn btn-next" disabled>⏭ NEXT</button>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ QUOTE CONFIG ═══════ -->
+        <div class="section">
+            <label class="section-label">动态标语 / Quote (shown during animations)</label>
+            <input type="text" id="input-quote" placeholder="Enter a motivational quote..." spellcheck="false"
+                autocomplete="off">
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ SPEAKER LIST ═══════ -->
+        <div class="section">
+            <label class="section-label">发言人列表 / Speaker List</label>
+            <div id="speakers-container">
+                <!-- Speaker rows dynamically rendered -->
+            </div>
+            <div class="btn-row" style="margin-top: 6px;">
+                <button class="btn btn-sm" id="btn-add-speaker">+ Add Speaker</button>
+                <button class="btn btn-sm btn-import-excel" id="btn-import-excel">📂 Import Excel</button>
+                <button class="btn btn-sm btn-load-next" id="btn-load-next">⏭ Load Next</button>
+                <button class="btn btn-sm" id="btn-unlink" title="Edit manually without changing list">🔓
+                    Unlink</button>
+                <button class="btn btn-sm" id="btn-restart-list" title="Start over from first speaker">⟲
+                    Restart</button>
+            </div>
+        </div>
+
+        <!-- ═══════ ADD TIME ═══════ -->
+
+
+        <hr class="divider">
+
+        <!-- ═══════ TIERED COST CONFIG ═══════ -->
+        <div class="section">
+            <label class="section-label">费用阶梯 / Cost Tiers</label>
+            <div id="tiers-container">
+                <!-- Tiers dynamically rendered -->
+            </div>
+            <button class="btn btn-sm" id="btn-add-tier">+ Add Tier</button>
+            <div class="inline-inputs mt-8">
+                <label class="mini-label">最高 / Max ￥</label>
+                <input type="number" id="input-max-cost" min="0" max="99999" value="2500" class="medium">
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ ALARM CONFIG ═══════ -->
+        <div class="section">
+            <div class="section-header-row">
+                <label class="section-label">提醒 / Alarm Thresholds (minutes remaining)</label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="alarm-enabled" checked>
+                    <span>Enable Sounds</span>
+                </label>
+            </div>
+            <div class="section-row gap-12">
+                <div class="inline-inputs">
+                    <label class="mini-label">Alarm 1</label>
+                    <input type="number" id="input-alarm-1" min="0" max="60" step="any" value="5" class="narrow">
+                    <span class="unit">min</span>
+                </div>
+                <div class="inline-inputs">
+                    <label class="mini-label">Alarm 2</label>
+                    <input type="number" id="input-alarm-2" min="0" max="60" step="any" value="1" class="narrow">
+                    <span class="unit">min</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-save" id="btn-save-config">💾 Save Config</button>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ HISTORY ═══════ -->
+        <div id="history-section" class="section hidden">
+            <div class="section-header">
+                <label class="section-label">记录 / History</label>
+                <button id="btn-export" class="btn btn-sm" title="Export CSV">📥 Export</button>
+            </div>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script src="js/control_panel.js"></script>
+</body>
+
+</html>
