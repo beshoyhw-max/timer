@@ -626,9 +626,10 @@ class TimerEngine:
                     alarm_2_trigger = True
 
         # Alarm 3: recurring alarm during overtime
-        if self.alarms_enabled and self.phase == Phase.OVERTIME and self.alarm_3_interval > 0:
+        if self.phase == Phase.OVERTIME and self.alarm_3_interval > 0:
             if now - self._alarm_3_last_fired >= self.alarm_3_interval:
-                alarm_3_trigger = True
+                if self.alarms_enabled:
+                    alarm_3_trigger = True
                 self._alarm_3_last_fired = now
 
         overtime_seconds = 0.0
