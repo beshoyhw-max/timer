@@ -158,7 +158,12 @@ async function playEnvelopeAnimation(cost, quote) {
   animating = true;
 
   try {
+    // Hide floating timer immediately so it doesn't flash "00:00" or overlap during transition
+    DOM.timer.style.display = 'none';
+
     try { await pywebview.api.go_fullscreen(); } catch (e) { }
+    // Wait for pywebview to complete actual OS window transition
+    await sleep(250);
 
     DOM.overlay.classList.remove('hidden');
 
@@ -197,6 +202,8 @@ async function playEnvelopeAnimation(cost, quote) {
       DOM.animationQuote.style.opacity = '';
     }
 
+    DOM.timer.style.display = '';
+
     try { await pywebview.api.go_floating(); } catch (e) { }
     animating = false;
   }
@@ -209,7 +216,12 @@ async function playOnTimeAnimation(speaker, quote) {
   animating = true;
 
   try {
+    // Hide floating timer immediately so it doesn't flash "00:00" or overlap during transition
+    DOM.timer.style.display = 'none';
+
     try { await pywebview.api.go_fullscreen(); } catch (e) { }
+    // Wait for pywebview to complete actual OS window transition
+    await sleep(250);
 
     DOM.overlay.classList.remove('hidden');
 
@@ -252,6 +264,8 @@ async function playOnTimeAnimation(speaker, quote) {
       DOM.animationQuote.style.animation = '';
       DOM.animationQuote.style.opacity = '';
     }
+
+    DOM.timer.style.display = '';
 
     document.getElementById('ty-text').textContent = '议题超时，请赞助';
     // document.getElementById('ty-sub').textContent = 'Thank you for your contribution';
