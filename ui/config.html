@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/config.css">
+</head>
+
+<body>
+    <div id="config-app">
+
+        <!-- ═══════ TIERED COST CONFIG ═══════ -->
+        <div class="section">
+            <label class="section-label">费用阶梯 / Cost Tiers</label>
+            <div id="tiers-container">
+                <!-- Tiers dynamically rendered -->
+            </div>
+            <button class="btn btn-sm" id="btn-add-tier">+ Add Tier</button>
+            <div class="inline-inputs mt-8">
+                <label class="mini-label">最高 / Max ￥</label>
+                <input type="number" id="input-max-cost" min="0" max="99999" value="2500" class="medium">
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ APPEARANCE CONFIG ═══════ -->
+        <div class="section">
+            <label class="section-label">外观 / Appearance</label>
+
+            <!-- Background Image -->
+            <div class="appearance-row">
+                <span class="appearance-label">🖼️ Background</span>
+                <div class="bg-picker-group">
+                    <div id="bg-preview" class="bg-preview-thumb"></div>
+                    <button class="btn btn-sm" id="btn-bg-image">Change Image</button>
+                </div>
+            </div>
+
+            <!-- Font Family -->
+            <div class="appearance-row">
+                <span class="appearance-label">🔤 Font</span>
+                <div class="font-picker-group">
+                    <div id="custom-font-select" class="custom-select" tabindex="0">
+                        <div class="custom-select-value" id="custom-font-value">JetBrains Mono</div>
+                        <div class="custom-select-dropdown hidden" id="custom-font-dropdown">
+                            <input type="text" id="font-search" placeholder="Search fonts…" autocomplete="off"
+                                spellcheck="false">
+                            <div class="custom-select-options" id="custom-font-options">
+                                <!-- Options populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="font-preview" class="font-preview-box">00:00 — AaBbCc 你好</div>
+
+            <!-- Presets -->
+            <div class="appearance-row">
+                <span class="appearance-label">Presets</span>
+                <div class="preset-row">
+                    <button class="btn btn-sm btn-preset" data-preset="classic" title="Classic (default)">🔥
+                        Classic</button>
+                    <button class="btn btn-sm btn-preset" data-preset="ocean" title="Ocean Blue">🌊 Ocean</button>
+                    <button class="btn btn-sm btn-preset" data-preset="neon" title="Neon">💜 Neon</button>
+                    <button class="btn btn-sm btn-preset" data-preset="forest" title="Forest">🌿 Forest</button>
+                    <button class="btn btn-sm btn-preset" data-preset="bright_luxury" title="Bright Luxury">✨ Bright
+                        Luxury</button>
+                </div>
+            </div>
+
+            <!-- Color Pickers -->
+            <div class="color-grid">
+                <div class="color-item">
+                    <label>Idle</label>
+                    <input type="color" id="input-color-idle" value="#ffffff">
+                </div>
+                <div class="color-item">
+                    <label>Countdown</label>
+                    <input type="color" id="input-color-countdown" value="#2dd4bf">
+                </div>
+                <div class="color-item">
+                    <label>Warning</label>
+                    <input type="color" id="input-color-warning" value="#fbbf24">
+                </div>
+                <div class="color-item">
+                    <label>Overtime</label>
+                    <input type="color" id="input-color-overtime" value="#ef4444">
+                </div>
+                <div class="color-item">
+                    <label>Thank You</label>
+                    <input type="color" id="input-color-thankyou" value="#f1c40f">
+                </div>
+                <div class="color-item">
+                    <label>Cost</label>
+                    <input type="color" id="input-color-cost" value="#ff7979">
+                </div>
+                <div class="color-item">
+                    <label>Quote</label>
+                    <input type="color" id="input-color-quote" value="#f1c40f">
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════ ALARM CONFIG ═══════ -->
+        <div class="section">
+            <div class="section-header-row">
+                <label class="section-label">提醒 / Alarm Config</label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="alarm-enabled" checked>
+                    <span>Enable Sounds</span>
+                </label>
+            </div>
+            <div class="alarm-config-grid">
+                <!-- Alarm 1 -->
+                <div class="alarm-row">
+                    <label class="mini-label" style="width: 55px;">Alarm 1:</label>
+                    <input type="number" id="input-alarm-1" min="0" max="60" step="any" value="5" class="narrow"
+                        title="Minutes remaining">
+                    <span class="unit">min</span>
+
+                    <button class="btn btn-sm btn-sound" id="btn-sound-1" title="Select Sound">🎵 1.wav</button>
+                    <button class="btn btn-sm btn-play-sound" id="btn-play-1" title="Preview Sound">▶</button>
+
+                    <label class="mini-label" style="margin-left:auto;">Play:</label>
+                    <input type="number" id="input-duration-1" min="0" max="60" step="any" value="0" class="narrow"
+                        title="0 = full duration">
+                    <span class="unit">sec</span>
+                </div>
+
+                <!-- Alarm 2 -->
+                <div class="alarm-row">
+                    <label class="mini-label" style="width: 55px;">Alarm 2:</label>
+                    <input type="number" id="input-alarm-2" min="0" max="60" step="any" value="1" class="narrow"
+                        title="Minutes remaining">
+                    <span class="unit">min</span>
+
+                    <button class="btn btn-sm btn-sound" id="btn-sound-2" title="Select Sound">🎵 2.wav</button>
+                    <button class="btn btn-sm btn-play-sound" id="btn-play-2" title="Preview Sound">▶</button>
+
+                    <label class="mini-label" style="margin-left:auto;">Play:</label>
+                    <input type="number" id="input-duration-2" min="0" max="60" step="any" value="0" class="narrow"
+                        title="0 = full duration">
+                    <span class="unit">sec</span>
+                </div>
+
+                <!-- Alarm 3 -->
+                <div class="alarm-row">
+                    <label class="mini-label" style="width: 55px;">Alarm 3:</label>
+                    <input type="number" id="input-alarm-3" min="0.1" max="60" step="any" value="1" class="narrow"
+                        title="Repeat every X mins">
+                    <span class="unit">rep</span>
+
+                    <button class="btn btn-sm btn-sound" id="btn-sound-3" title="Select Sound">🎵 3.wav</button>
+                    <button class="btn btn-sm btn-play-sound" id="btn-play-3" title="Preview Sound">▶</button>
+
+                    <label class="mini-label" style="margin-left:auto;">Play:</label>
+                    <input type="number" id="input-duration-3" min="0" max="60" step="any" value="0" class="narrow"
+                        title="0 = full duration">
+                    <span class="unit">sec</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/config_panel.js"></script>
+</body>
+
+</html>
