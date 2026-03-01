@@ -1,1 +1,0 @@
-python -c "import ctypes; u=ctypes.windll.user32; u.SetProcessDPIAware(); print(f'{u.GetSystemMetrics(0)}x{u.GetSystemMetrics(1)}')"
