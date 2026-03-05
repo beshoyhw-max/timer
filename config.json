@@ -1,0 +1,57 @@
+{
+  "tiers": [
+    {
+      "threshold_mins": 0.0,
+      "rate_amount": 5.0,
+      "rate_interval": 5,
+      "unit": "sec"
+    }
+  ],
+  "max_cost": 2500.0,
+  "alarm_threshold_1": 12.0,
+  "alarm_threshold_2": 0.0,
+  "alarm_3_interval": 6.0,
+  "alarms_enabled": true,
+  "alarm_sounds": {
+    "1": "1.wav",
+    "2": "2.wav",
+    "3": "3.wav"
+  },
+  "alarm_durations": {
+    "1": 3.0,
+    "2": 3.0,
+    "3": 3.0
+  },
+  "language": "zh",
+  "quote": "Focus on the goal.",
+  "speakers": [
+    {
+      "name": "Alice",
+      "time_secs": 13,
+      "words": "Focus on the goal."
+    },
+    {
+      "name": "Bob",
+      "time_secs": 600,
+      "words": "Time is money."
+    },
+    {
+      "name": "Charlie",
+      "time_secs": 180,
+      "words": "Keep it simple."
+    }
+  ],
+  "appearance": {
+    "background_image": "premium_bg.png",
+    "color_countdown": "#00a2ff",
+    "color_warning": "#fbe018",
+    "color_overtime": "#c23b3b",
+    "color_thankyou": "#f1c40f",
+    "color_cost": "#ff7979",
+    "color_quote": "#f1c40f",
+    "font_family": "Arial Rounded MT",
+    "text_on_time": "准时完成!",
+    "text_overtime": "议题超时，请赞助",
+    "color_idle": "#ffffff"
+  }
+}

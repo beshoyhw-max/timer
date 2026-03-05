@@ -1,0 +1,12 @@
+[BUG]: out of license
+
+## Command Line
+C:\Users\LXY\AppData\Local\Programs\Python\Python312\Scripts\pyarmor gen --pack onefile --obf-code 2 --mix-str -O dist_protected app.py
+
+## Environments
+Python 3.12.10
+Pyarmor 9.2.3 (trial), 000000, non-profits
+Platform windows.x86_64
+Native windows.amd64
+Home C:\Users\LXY\.pyarmor
+

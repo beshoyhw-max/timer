@@ -1,0 +1,464 @@
+# Display Customization Feature Migration Plan
+
+The following plan outlines all the code changes needed to add the **Appearance Customization** feature to the correct version of the Meeting Timer project. You can share this plan with an AI assistant or apply it manually.
+
+## 1. Backend Changes
+
+### [MODIFY] [timer_engine.py](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/timer_engine.py)
+Add appearance configuration handling to the [TimerEngine](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/timer_engine.py#76-673) class.
+
+- **In [__init__(self)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py#27-29)**:
+  ```python
+  # Add appearance config dict
+  self.appearance: dict = {
+      "background_image": "1.jpg",
+      "color_countdown": "#2dd4bf",
+      "color_warning": "#fbbf24",
+      "color_overtime": "#ef4444",
+      "color_thankyou": "#f1c40f",
+      "color_cost": "#ff7979",
+      "color_quote": "#f1c40f",
+  }
+  ```
+- **In [_load_config(self)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/timer_engine.py#117-139)**:
+  ```python
+  # Under the loop reading `data`, add:
+  if "appearance" in data:
+      self.appearance.update(data["appearance"])
+  ```
+- **In [get_config(self)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py#98-100) and [_persist_config(self)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/timer_engine.py#300-316)**:
+  ```python
+  # In the `data` dict returned or saved, add:
+  "appearance": dict(self.appearance),
+  ```
+- **In [get_state(self)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py#57-65)**:
+  ```python
+  # In the returned state dict, add:
+  "appearance": dict(self.appearance),
+  ```
+- **Add new Appearance methods**:
+  ```python
+  # ── Appearance ─────────────────────────────────────────────────
+
+  def get_appearance(self) -> dict:
+      return dict(self.appearance)
+
+  def set_appearance(self, data: dict):
+      self.appearance.update(data)
+      self._persist_config()
+  ```
+
+### [MODIFY] [app.py](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py)
+Add appearance endpoints to the [TimerAPI](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py#25-147) class.
+
+- **Imports**: Add `import shutil`.
+- **In [TimerAPI](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/app.py#25-147)**: Add the following methods:
+  ```python
+  # ── Appearance ──────────────────────────────────────────────────
+
+  def get_appearance(self):
+      return self.engine.get_appearance()
+
+  def set_appearance(self, data: dict):
+      self.engine.set_appearance(data)
+
+  def set_background_image(self):
+      """Open file dialog to pick a background image, copy it to ui/image/."""
+      global control_window
+      file_types = ('Image Files (*.jpg;*.jpeg;*.png;*.webp;*.bmp)', 'All Files (*.*)')
+      result = control_window.create_file_dialog(
+          webview.FileDialog.OPEN,
+          file_types=file_types,
+      )
+      if not result:
+          return None
+      filepath = result[0] if isinstance(result, (list, tuple)) else result
+      filename = os.path.basename(filepath)
+      dest = os.path.join(UI_DIR, "image", filename)
+      try:
+          shutil.copy2(filepath, dest)
+      except shutil.SameFileError:
+          pass
+      self.engine.set_appearance({"background_image": filename})
+      return filename
+  ```
+
+---
+
+## 2. Control Panel UI
+
+### [MODIFY] [ui/control.html](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/control.html)
+Add the Appearance section immediately before the `ALARM CONFIG` section.
+
+```html
+<!-- ═══════ APPEARANCE CONFIG ═══════ -->
+<div class="section">
+    <label class="section-label">外观 / Appearance</label>
+
+    <!-- Background Image -->
+    <div class="appearance-row">
+        <span class="appearance-label">🖼️ Background</span>
+        <div class="bg-picker-group">
+            <div id="bg-preview" class="bg-preview-thumb"></div>
+            <button class="btn btn-sm" id="btn-bg-image">Change Image</button>
+        </div>
+    </div>
+
+    <!-- Presets -->
+    <div class="appearance-row">
+        <span class="appearance-label">Presets</span>
+        <div class="preset-row">
+            <button class="btn btn-sm btn-preset" data-preset="classic" title="Classic (default)">🔥 Classic</button>
+            <button class="btn btn-sm btn-preset" data-preset="ocean" title="Ocean Blue">🌊 Ocean</button>
+            <button class="btn btn-sm btn-preset" data-preset="neon" title="Neon">💜 Neon</button>
+            <button class="btn btn-sm btn-preset" data-preset="forest" title="Forest">🌿 Forest</button>
+        </div>
+    </div>
+
+    <!-- Color Pickers -->
+    <div class="color-grid">
+        <div class="color-item">
+            <label>Countdown</label>
+            <input type="color" id="input-color-countdown" value="#2dd4bf">
+        </div>
+        <div class="color-item">
+            <label>Warning</label>
+            <input type="color" id="input-color-warning" value="#fbbf24">
+        </div>
+        <div class="color-item">
+            <label>Overtime</label>
+            <input type="color" id="input-color-overtime" value="#ef4444">
+        </div>
+        <div class="color-item">
+            <label>Thank You</label>
+            <input type="color" id="input-color-thankyou" value="#f1c40f">
+        </div>
+        <div class="color-item">
+            <label>Cost</label>
+            <input type="color" id="input-color-cost" value="#ff7979">
+        </div>
+        <div class="color-item">
+            <label>Quote</label>
+            <input type="color" id="input-color-quote" value="#f1c40f">
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+```
+
+### [MODIFY] [ui/css/control.css](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/css/control.css)
+Append these styles at the end of the file.
+
+```css
+/* ═══════ APPEARANCE CONFIG ═══════ */
+
+.appearance-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.appearance-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 90px;
+    white-space: nowrap;
+}
+
+.bg-picker-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bg-preview-thumb {
+    width: 48px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-input);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.preset-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.btn-preset {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-secondary) !important;
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+    transition: all 0.2s;
+}
+
+.btn-preset:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-1px);
+}
+
+.btn-preset.active-preset {
+    border-color: var(--teal) !important;
+    color: var(--teal) !important;
+    background: rgba(45, 212, 191, 0.1) !important;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.color-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+.color-item label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    flex: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.color-item input[type="color"] {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid var(--border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+    flex-shrink: 0;
+}
+
+.color-item input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.color-item input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 3px;
+}
+```
+
+### [MODIFY] [ui/js/control_panel.js](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/js/control_panel.js)
+Add appearance logic.
+
+1. **DOM Refs (near top)**:
+   ```javascript
+   // Appearance
+   const btnBgImage = document.getElementById('btn-bg-image');
+   const bgPreview = document.getElementById('bg-preview');
+   const colorInputs = {
+       countdown: document.getElementById('input-color-countdown'),
+       warning: document.getElementById('input-color-warning'),
+       overtime: document.getElementById('input-color-overtime'),
+       thankyou: document.getElementById('input-color-thankyou'),
+       cost: document.getElementById('input-color-cost'),
+       quote: document.getElementById('input-color-quote'),
+   };
+   ```
+
+2. **In [loadConfig()](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/js/control_panel.js#80-102)**:
+   ```javascript
+   // After rendering speakers, add:
+   loadAppearance(cfg.appearance || {});
+   ```
+
+3. **Append the following functions at the end of the file (before the closing IIFE `})();`)**:
+   ```javascript
+   /* ═══════ APPEARANCE CONFIG ═══════ */
+
+   const PRESETS = {
+       classic: {
+           color_countdown: '#2dd4bf',
+           color_warning: '#fbbf24',
+           color_overtime: '#ef4444',
+           color_thankyou: '#f1c40f',
+           color_cost: '#ff7979',
+           color_quote: '#f1c40f',
+       },
+       ocean: {
+           color_countdown: '#38bdf8',
+           color_warning: '#fbbf24',
+           color_overtime: '#f97316',
+           color_thankyou: '#67e8f9',
+           color_cost: '#fb923c',
+           color_quote: '#67e8f9',
+       },
+       neon: {
+           color_countdown: '#a78bfa',
+           color_warning: '#f472b6',
+           color_overtime: '#fb7185',
+           color_thankyou: '#c084fc',
+           color_cost: '#fb7185',
+           color_quote: '#c084fc',
+       },
+       forest: {
+           color_countdown: '#4ade80',
+           color_warning: '#facc15',
+           color_overtime: '#f87171',
+           color_thankyou: '#86efac',
+           color_cost: '#fca5a5',
+           color_quote: '#86efac',
+       },
+   };
+
+   function loadAppearance(app) {
+       if (app.color_countdown) colorInputs.countdown.value = app.color_countdown;
+       if (app.color_warning) colorInputs.warning.value = app.color_warning;
+       if (app.color_overtime) colorInputs.overtime.value = app.color_overtime;
+       if (app.color_thankyou) colorInputs.thankyou.value = app.color_thankyou;
+       if (app.color_cost) colorInputs.cost.value = app.color_cost;
+       if (app.color_quote) colorInputs.quote.value = app.color_quote;
+       if (app.background_image) {
+           bgPreview.style.backgroundImage = `url('../image/${app.background_image}')`;
+       }
+       highlightActivePreset();
+   }
+
+   function collectAppearance() {
+       return {
+           color_countdown: colorInputs.countdown.value,
+           color_warning: colorInputs.warning.value,
+           color_overtime: colorInputs.overtime.value,
+           color_thankyou: colorInputs.thankyou.value,
+           color_cost: colorInputs.cost.value,
+           color_quote: colorInputs.quote.value,
+       };
+   }
+
+   async function saveAppearance() {
+       try {
+           await pywebview.api.set_appearance(collectAppearance());
+       } catch (e) {
+           console.error('Save appearance failed:', e);
+       }
+       highlightActivePreset();
+   }
+
+   // Auto-save on any color change
+   Object.values(colorInputs).forEach(input => {
+       input.addEventListener('input', saveAppearance);
+   });
+
+   // Background image button
+   btnBgImage.addEventListener('click', async () => {
+       try {
+           const filename = await pywebview.api.set_background_image();
+           if (filename) {
+               bgPreview.style.backgroundImage = `url('../image/${filename}')`;
+               btnBgImage.textContent = '✅ Changed';
+               setTimeout(() => { btnBgImage.textContent = 'Change Image'; }, 1500);
+           }
+       } catch (e) {
+           console.error('Background image picker failed:', e);
+       }
+   });
+
+   // Preset buttons
+   document.querySelectorAll('.btn-preset').forEach(btn => {
+       btn.addEventListener('click', () => {
+           const preset = PRESETS[btn.dataset.preset];
+           if (!preset) return;
+           colorInputs.countdown.value = preset.color_countdown;
+           colorInputs.warning.value = preset.color_warning;
+           colorInputs.overtime.value = preset.color_overtime;
+           colorInputs.thankyou.value = preset.color_thankyou;
+           colorInputs.cost.value = preset.color_cost;
+           colorInputs.quote.value = preset.color_quote;
+           saveAppearance();
+       });
+   });
+
+   function highlightActivePreset() {
+       const current = collectAppearance();
+       document.querySelectorAll('.btn-preset').forEach(btn => {
+           const preset = PRESETS[btn.dataset.preset];
+           if (!preset) return;
+           const match = Object.keys(preset).every(k => preset[k] === current[k]);
+           btn.classList.toggle('active-preset', match);
+       });
+   }
+   ```
+
+---
+
+## 3. Display Sub-system
+
+### [MODIFY] [ui/js/display.js](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/js/display.js)
+Render the colors dynamically from the state.
+
+1. **Variables (near top)**:
+   ```javascript
+   let _lastAppearanceJSON = '';
+
+   function applyAppearance(app) {
+     if (!app) return;
+     const json = JSON.stringify(app);
+     if (json === _lastAppearanceJSON) return;
+     _lastAppearanceJSON = json;
+
+     const root = document.documentElement;
+     const r = root.style;
+
+     // Phase colors
+     if (app.color_countdown) {
+       r.setProperty('--teal', app.color_countdown);
+       r.setProperty('--teal-glow', app.color_countdown + '40');
+     }
+     if (app.color_warning) {
+       r.setProperty('--amber', app.color_warning);
+       r.setProperty('--amber-glow', app.color_warning + '4d');
+     }
+     if (app.color_overtime) {
+       r.setProperty('--red', app.color_overtime);
+       r.setProperty('--red-glow', app.color_overtime + '59');
+     }
+     if (app.color_thankyou) {
+       r.setProperty('--envelope-gold', app.color_thankyou);
+     }
+     if (app.color_cost) {
+       const tyCost = document.getElementById('ty-cost');
+       if (tyCost) tyCost.style.color = app.color_cost;
+       const moneyVal = document.getElementById('money-value');
+       if (moneyVal) moneyVal.style.color = app.color_overtime || '';
+     }
+     if (app.color_quote) {
+       const quoteEl = document.getElementById('animation-quote');
+       if (quoteEl) quoteEl.style.color = app.color_quote;
+     }
+
+     // Background image
+     if (app.background_image) {
+       const backdrop = document.getElementById('fs-backdrop');
+       if (backdrop) {
+         backdrop.style.backgroundImage = `url('image/${app.background_image}')`;
+       }
+     }
+   }
+   ```
+
+2. **In [renderState(state)](file:///c:/Users/LXY/Desktop/meeting%20planner/timer-qt/ui/js/display.js#41-90) function (near bottom, before the brace)**:
+   ```javascript
+   // Apply appearance (colors / bg)
+   if (state.appearance) applyAppearance(state.appearance);
+   ```
